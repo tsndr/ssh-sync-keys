@@ -1,6 +1,6 @@
 # SSH Sync Keys
 
-Remote `-example` suffix from config files and fill them with data.
+Remove `-example` suffix from config files and fill them with data.
 
 Run `npm run sync` to sync the keys.
 
