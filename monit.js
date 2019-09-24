@@ -19,7 +19,7 @@ for (const host of hosts) {
             stream.on('close', (code, signal) => {
                 conn.end()
             }).on('data', data => {
-                console.log(`${host}: ${data.toString().trim()}`)
+                console.log(`${host}: ${data.toString().trim().split('load average: ', 2)[1]}`)
             }).stderr.on('data', (data) => {
                 console.log('STDERR: ' + data)
             })
