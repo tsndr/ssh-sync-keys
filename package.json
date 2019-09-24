@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "sync": "node sync",
+    "monit": "node monit"
   },
   "keywords": [],
   "author": "",

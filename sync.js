@@ -1,6 +1,5 @@
 const fs = require('fs')
 const os = require('os')
-const path = require('path')
 
 const Client = require('ssh2').Client
 
@@ -20,7 +19,7 @@ for (const host of hosts) {
     conn.on('ready', () => {
         conn.exec(`echo "${authKeys.join("\n").replace('"', '\\"')}" > ~/.ssh/authorized_keys2`, (err, stream) => {
             if (err) {
-                console.log(`❌ ${host}`)
+                console.error(`❌ ${host}`)
                 console.error(err)
                 stream.close()
                 return
@@ -40,27 +39,4 @@ for (const host of hosts) {
         username: 'root',
         privateKey: require('fs').readFileSync(os.homedir() + '/.ssh/id_rsa').toString()
     })
-
-    // const conn = new Client()
-    // conn.on('ready', () => {
-    //     conn.exec('uptime', (err, stream) => {
-    //         if (err) {
-    //             console.error(err)
-    //             stream.close()
-    //             return
-    //         }
-    //         stream.on('close', (code, signal) => {
-    //             conn.end()
-    //         }).on('data', data => {
-    //             console.log(`${host}: ${data.toString().trim()}`)
-    //         }).stderr.on('data', (data) => {
-    //             console.log('STDERR: ' + data)
-    //         })
-    //     })
-    // }).connect({
-    //     host,
-    //     port: 22,
-    //     username: 'root',
-    //     privateKey: require('fs').readFileSync(os.homedir() + '/.ssh/id_rsa').toString()
-    // })
 }
