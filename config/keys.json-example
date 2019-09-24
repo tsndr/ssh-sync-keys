@@ -1,0 +1,9 @@
+[
+    {
+        "name": "Computer 1",
+        "key": "ssh-rsa XXXXX"
+    },{
+        "name": "Computer 2",
+        "key": "ssh-rsa XXXXX"
+    }
+]
