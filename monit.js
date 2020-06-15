@@ -7,27 +7,35 @@ const Client = require('ssh2').Client
 const hosts = JSON.parse(fs.readFileSync('config/hosts.json'))
 
 for (const host of hosts) {
-    const conn = new Client()
-    conn.on('ready', () => {
-        conn.exec('uptime', (err, stream) => {
-            if (err) {
-                console.error(`${host}: Can't connect!`)
-                console.error(err)
-                stream.close()
-                return
-            }
-            stream.on('close', (code, signal) => {
-                conn.end()
-            }).on('data', data => {
-                console.log(`${host}: ${data.toString().trim().split('load average: ', 2)[1]}`)
-            }).stderr.on('data', (data) => {
-                console.log('STDERR: ' + data)
+    try {
+        const conn = new Client()
+        conn.on('ready', () => {
+            conn.exec(`uptime`, (err, stream) => {
+                if (err) {
+                    console.error(`❌ ${host}`)
+                    // console.error(err)
+                    stream.close()
+                    return
+                }
+                // console.log(`✅ ${host}`)
+                stream.on('close', (code, signal) => {
+                    conn.end()
+                }).on('data', data => {
+                    console.log(`✅ ${host}: ${data.toString().trim().split('load average: ', 2)[1]}`)
+                }).stderr.on('data', (data) => {
+                    // console.log('STDERR: ' + data)
+                })
             })
+        }).on('error', error => {
+            console.error(`❌ ${host}`)
+        }).connect({
+            host,
+            port: 22,
+            username: 'root',
+            privateKey: require('fs').readFileSync(os.homedir() + '/.ssh/id_rsa').toString(),
+            readyTimeout: 1000
         })
-    }).connect({
-        host,
-        port: 22,
-        username: 'root',
-        privateKey: require('fs').readFileSync(os.homedir() + '/.ssh/id_rsa').toString()
-    })
+    } catch (err) {
+        console.error(`❌ ${host}`)
+    }
 }
